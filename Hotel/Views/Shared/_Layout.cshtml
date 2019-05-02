@@ -1,0 +1,82 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="~/Content/Style.css" rel="stylesheet">
+    <title>@ViewBag.Title</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+</head>
+<body>
+    <div class="navbar navbar-inverse navbar-fixed-top" style="background-color:#2F4F4F">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                @Html.ActionLink("Hotel", "List", "Room", new { area = "" }, new { @class = "navbar-brand" })
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        if (User.IsInRole("Owner"))
+                        {
+                            <li>@Html.ActionLink("Users", "List", "User")</li>
+                            <li>@Html.ActionLink("Checks", "List", "Check")</li>
+                        }
+                        else
+                        {
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                    Profile
+                                    <span class="caret"></span>
+                                </a>
+                                <ul class="dropdown-menu" role="menu">
+                                    @if (User.IsInRole("User"))
+                                    {
+                                        <li>@Html.ActionLink("Make request", "Add", "Request")</li>
+                                        <li>@Html.ActionLink("My response", "List", "Request")</li>
+                                        <li>@Html.ActionLink("Checks", "List", "Check")</li>
+                                    }
+                                    else if (User.IsInRole("Admin"))
+                                    {
+                                        <li>@Html.ActionLink("Requests", "List", "Request")</li>
+                                    }
+                                </ul>
+                            </li>
+                        }
+                    }
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        string userHello = "Hello, " + User.Identity.Name.ToString();
+                        <li><div style="padding: 15px; color: #9d9d9d;">@userHello</div></li>
+                        <li>@Html.ActionLink("Logout", "Logout", "Account")</li>
+                    }
+                    else
+                    {
+                        <li>@Html.ActionLink("Register", "Register", "Account")</li>
+                        <li>@Html.ActionLink("Login", "Login", "Account")</li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; @DateTime.Now.Year - ASP.NET Application by Roman Brestovytskyi</p>
+        </footer>
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+</body>
+</html>
