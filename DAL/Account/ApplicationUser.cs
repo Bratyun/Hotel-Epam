@@ -79,7 +79,5 @@ namespace DAL.Account
                 return user;
             }
         }
-
-        
     }
 }

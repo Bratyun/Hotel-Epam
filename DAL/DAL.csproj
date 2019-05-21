@@ -84,6 +84,11 @@
     <Compile Include="EntityClasses\Check.cs" />
     <Compile Include="EntityClasses\Request.cs" />
     <Compile Include="EntityClasses\Room.cs" />
+    <Compile Include="Migrations\201903192105273_InitialCreate.cs" />
+    <Compile Include="Migrations\201903192105273_InitialCreate.Designer.cs">
+      <DependentUpon>201903192105273_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ApplicationRoleManager.cs" />
     <Compile Include="Models\ApplicationUserManager.cs" />
     <Compile Include="Models\ContextInitializer.cs" />
@@ -93,6 +98,10 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201903192105273_InitialCreate.resx">
+      <DependentUpon>201903192105273_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

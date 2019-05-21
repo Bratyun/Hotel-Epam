@@ -238,5 +238,19 @@ namespace DAL.EntityClasses
                 return false;
             }
         }
+
+        public static List<Room> GetByComfortAndSize(int comfort, int size)
+        {
+            using (ApplicationContext db = new ApplicationContext())
+            {
+                var c = db.Rooms.Where(x => x.Comfort == comfort && x.RoomSize == size && x.Status == RoomStatus.Free).ToList();
+                if (c.Count < 1)
+                {
+                    return db.Rooms.Where(x => x.Status == RoomStatus.Free).ToList();
+                }
+
+                return c;
+            }
+        }
     }
 }

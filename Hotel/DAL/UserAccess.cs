@@ -13,6 +13,8 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace Hotel.DAL
 {
@@ -92,24 +94,33 @@ namespace Hotel.DAL
         {
             try
             {
-                Logger.Debug("Get users with role from database");
-                List<UserWithRoleViewModel> endUsers = new List<UserWithRoleViewModel>();
-                foreach (var item in userManager.Users.Include(x => x.Roles))
+                using (ApplicationContext context = new ApplicationContext())
                 {
-                    ApplicationRole role = RoleAccess.GetRoleByUser(item);
-                    UserWithRoleViewModel us = new UserWithRoleViewModel
+                    var usersWithRoles = (from user in context.Users
+                        select new
+                        {
+                            UserId = user.Id,
+                            Username = user.UserName,
+                            Email = user.Email,
+                            RoleNames = (from userRole in user.Roles
+                                join role in context.Roles on userRole.RoleId
+                                    equals role.Id
+                                select role.Name).ToList(),
+                            RoleId = (from userRole in user.Roles
+                                join role in context.Roles on userRole.RoleId
+                                    equals role.Id
+                                select role.Id).ToList().FirstOrDefault()
+                        }).ToList().Select(p => new UserWithRoleViewModel
+
                     {
-                        Id = item.Id,
-                        RoleName = role.Name,
-                        RoleId = role.Id,
-                        UserName = item.UserName,
-                        PhoneNumber = item.PhoneNumber,
-                        Email = item.Email
-                    };
-                    endUsers.Add(us);
+                        Id = p.UserId,
+                        UserName = p.Username,
+                        Email = p.Email,
+                        RoleName = p.RoleNames.FirstOrDefault(),
+                        RoleId = p.RoleId
+                    });
+                    return usersWithRoles.ToList();
                 }
-                Logger.Debug("End of getting users with role from database");
-                return endUsers;
             }
             catch (Exception ex)
             {

@@ -66,7 +66,8 @@ namespace Hotel.DAL
         internal static bool Delete(int roomId)
         {
             Logger.Debug("Start delete Room from database");
-            bool result = Room.Delete(roomId);
+            Room room = Room.GetById(roomId);
+            bool result = Room.Delete(room);
             if (!result)
             {
                 Logger.Info("Room not deleted from database");
